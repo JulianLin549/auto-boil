@@ -1,0 +1,23 @@
+<%-include ("./partials/header")  -%>
+<div class="container">
+
+    <h1 class="mt-4">Dashboard</h1>
+    <p class="lead mb-3">Welcome <%= name  %></p>
+    <a id="btn" href="/users/logout" class="btn btn-secondary">
+        <span id="logout">Log out</span>
+        <img id="loading" style="display:none" src="../public/images/Spinner-1s-200px.svg" height="30px" width="30px">
+    </a>
+
+</div>
+
+<script>
+    const btn = document.querySelector("#btn");
+    const loading = document.querySelector("#loading");
+    const logout = document.querySelector("#logout");
+    btn.addEventListener('click', () => {
+        btn.classList.add("disabled");
+        loading.style.display = "inline-block";
+        logout.textContent = "Logging out ...";
+    })
+</script>
+<%-include ("./partials/footer")  -%>
