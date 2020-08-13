@@ -18,17 +18,12 @@ app.use('/public/images/', express.static('./public/images'));
 //Passport config
 require('./config/passport')(passport);
 
+//connect DB
+require("./db/connectDB");
 
-//DB Config
-const db = require('./config/keys').MongoURI;
+//config email
+require("./config/smtp");
 
-//Connect to Mongo
-mongoose.connect(db, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
-    .then(() => console.log('MongoDB Connected...'))
-    .catch(err => console.log(err));
 //EJS
 app.set('view engine', 'ejs');
 
@@ -72,6 +67,7 @@ app.use((req, res, next) => {
 //pertain the route from the index
 app.use('/', require('./routes/index'))
 app.use('/users', require('./routes/users'))
+
 
 const PORT = process.env.PORT || 3000;
 

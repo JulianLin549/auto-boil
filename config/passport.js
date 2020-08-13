@@ -6,6 +6,8 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
 module.exports = (passport) => {
+
+    //check login info
     const authenticateUser = async (email, password, done) => {
 
         try {
@@ -30,7 +32,6 @@ module.exports = (passport) => {
         } catch (err) {
             console.log(err)
         }
-
     }
     passport.use(new LocalStrategy({ usernameField: 'email' }, authenticateUser));
 
@@ -42,4 +43,6 @@ module.exports = (passport) => {
             done(err, user);
         });
     });
+
+
 }
