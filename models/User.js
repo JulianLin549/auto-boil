@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
     uuid: {
         type: String,
         required: true,
-        unique: true,
+        unique: true
     }
 
 

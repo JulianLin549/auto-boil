@@ -225,7 +225,7 @@ router.post('/recover', async (req, res) => {
             });
 
         } else {
-            req.flash('serror_msg', 'Did not find user, please register.');
+            req.flash('error_msg', 'Did not find user, please register.');
             res.redirect('register')
         }
     } catch {
@@ -247,7 +247,7 @@ router.get('/recover/:token', async (req, res) => {
             //find if userid already in db
             let user = await User.findOne({ uuid });
             if (user) {
-                res.render('newpassword', { uuid })
+                return res.render('newpassword', { uuid });
             }
 
         } catch (error) {
@@ -295,9 +295,24 @@ router.post('/recover/:uuid', async (req, res) => {
                 const hash = await bcrypt.hash(password, salt);
 
 
-                await User.update({ _id: user._id }, { password: hash });
+                await User.updateOne({ _id: user._id }, { password: hash });
                 console.log("password updated");
-                await User.update({ _id: user._id }, { uuid: uuidv4() })
+
+                //check if uuid is duplicate, if so, generate another uuid
+                let flag = true;
+                while (flag) {
+                    let new_uuid = uuidv4();
+                    let duplicate_uuid_user = await User.findOne({ uuid: new_uuid })
+                    if (!duplicate_uuid_user) {
+                        flag = false;
+                        console.log("no duplicate")
+                        await User.updateOne({ _id: user._id }, { uuid: new_uuid })
+                    } else {
+                        console.log("uuid already been taken!")
+                        new_uuid = uuidv4()
+                    }
+                }
+
                 req.flash('success_msg', 'Password updated success!');
                 res.redirect('/users/login');
             }
